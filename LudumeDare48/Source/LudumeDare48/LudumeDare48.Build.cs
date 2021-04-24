@@ -12,7 +12,7 @@ public class LudumeDare48 : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
-		PublicIncludePaths.AddRange(new string[] { "LudumeDare48", "LudumeDare48/Menu", "LudumeDare48/Menu/Public", "LudumeDare48/Menu/Public/HUD", "LudumeDare48/Menu/Public/HUD/UI" });
+		PublicIncludePaths.AddRange(new string[] { "LudumeDare48", "LudumeDare48/Public", "LudumeDare48/Public/Items", "LudumeDare48/Public/HUD", "LudumeDare48/Public/Components", "LudumeDare48/Menu", "LudumeDare48/Menu/Public", "LudumeDare48/Menu/Public/HUD", "LudumeDare48/Menu/Public/HUD/UI" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
