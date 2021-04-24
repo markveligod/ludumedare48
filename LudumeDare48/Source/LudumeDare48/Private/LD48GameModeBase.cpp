@@ -17,7 +17,8 @@ void ALD48GameModeBase::StartPlay()
 {
 	Super::StartPlay();
 
-	this->ChangeGameState(EGameState::Welcome);
+	//inprogress is temp
+	this->ChangeGameState(EGameState::InProgress);
 }
 
 void ALD48GameModeBase::ChangeGameState(EGameState NewState)

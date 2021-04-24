@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Public/LD48DataTypes.h"
 #include "LD48OxygenActorComponent.generated.h"
 
 
@@ -20,9 +21,20 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Oxygen Editor");
+	float DefaultOxygen = 100.f;
 
-		
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Oxygen Editor")
+	float ExpenseOxygen = 1.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Oxygen Editor")
+	float DecreaseOxygenRateTime = 1.f;
+
+	
+
+private:
+	float CurrentOxygen;
+	FTimerHandle TimerHandleOxygen;
+
+	void DecreaseOxygen();
 };

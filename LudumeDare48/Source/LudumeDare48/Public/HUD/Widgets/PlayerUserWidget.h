@@ -6,6 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "PlayerUserWidget.generated.h"
 
+class UProgressBar;
+class UTextBlock;
+
 /**
  * 
  */
@@ -13,5 +16,15 @@ UCLASS()
 class LUDUMEDARE48_API UPlayerUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+protected:
+	UPROPERTY(meta = (BindWidget))
+		UProgressBar* OxygenProgressBar;
+	UPROPERTY(meta = (BindWidget))
+		UTextBlock* OxygenValueTextBlock;
+
+	virtual void NativeOnInitialized() override;
+
+private:
+	void UpdateProgressBarOxygen(float NewValueOxygen);
 };

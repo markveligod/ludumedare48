@@ -15,4 +15,7 @@ enum class EGameState : uint8
 // Delegat for call change State
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnGameState, EGameState);
 
+//Delegat for change progress bar oxygen
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnChangeOxygen, float);
+
 
