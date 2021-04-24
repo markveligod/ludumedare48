@@ -18,6 +18,7 @@ void ALD48GameModeBase::StartPlay()
 	Super::StartPlay();
 
 	//inprogress is temp
+	this->OnDeath.AddUObject(this, &ALD48GameModeBase::CallGameOverDeath);
 	this->ChangeGameState(EGameState::InProgress);
 }
 
@@ -27,6 +28,11 @@ void ALD48GameModeBase::ChangeGameState(EGameState NewState)
 		return;
 	this->CurrentState = NewState;
 	this->OnGameState.Broadcast(NewState);
+}
+
+void ALD48GameModeBase::CallGameOverDeath()
+{
+	this->ChangeGameState(EGameState::GameOver);
 }
 
 

@@ -2,10 +2,13 @@
 
 
 #include "Public/LD48CharacterPlayerBase.h"
+
+#include "LD48GameModeBase.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/LD48OxygenActorComponent.h"
+#include "Public/LD48GameModeBase.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogLD48CharacterPlayerBase, All, All);
 
@@ -38,6 +41,9 @@ void ALD48CharacterPlayerBase::BeginPlay()
 	check(GetWorld());
 
 	GetCharacterMovement()->Buoyancy = this->DefaultPowerBuoyancy;
+	this->CurrentCountDepth = this->DefaultCountDepth;
+	GetWorld()->GetTimerManager().SetTimer(this->TimerHandleDepth, this, &ALD48CharacterPlayerBase::UpdateTimerDepth, this->DefaultRateUpdateDepth, true);
+	this->GameMode = Cast<ALD48GameModeBase>(GetWorld()->GetAuthGameMode());
 }
 
 
@@ -70,11 +76,18 @@ void ALD48CharacterPlayerBase::DecreaseCountKey()
 {
 	this->CountKeys--;
 	//if count keys == 0 win
+	if (this->CountDepth == 0)
+		this->GameMode->OnDeath.Broadcast();
 }
 
 int32 ALD48CharacterPlayerBase::GetCountKeys() const
 {
-	return (CountKeys);
+	return (this->CountKeys);
+}
+
+int32 ALD48CharacterPlayerBase::GetCountDepth() const
+{
+	return (this->CountDepth);
 }
 
 void ALD48CharacterPlayerBase::PushRightMove()
@@ -96,6 +109,11 @@ void ALD48CharacterPlayerBase::PushUpMove()
 		GetCharacterMovement()->Buoyancy = this->HoldPowerBuoyancy;
 		this->bIsBuoyancyDone = true;
 		GetWorld()->GetTimerManager().SetTimer(TimerHandleBuoyancy, this, &ALD48CharacterPlayerBase::ChangeDefaultBuoyancy, 5.f, false);
+
+		this->CurrentCountDepth = this->HoldCountDepth;
+		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleDepth);
+		GetWorld()->GetTimerManager().SetTimer(this->TimerHandleDepth, this, &ALD48CharacterPlayerBase::UpdateTimerDepth, this->HoldRateUpdateDepth, true);
+
 	}
 }
 
@@ -106,6 +124,9 @@ void ALD48CharacterPlayerBase::PushDownMove()
 		GetCharacterMovement()->Buoyancy = this->BoostPowerBuoyancy;
 		this->bIsBuoyancyDone = true;
 		GetWorld()->GetTimerManager().SetTimer(TimerHandleBuoyancy, this, &ALD48CharacterPlayerBase::ChangeDefaultBuoyancy, 5.f, false);
+		this->CurrentCountDepth = this->BoostCountDepth;
+		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleDepth);
+		GetWorld()->GetTimerManager().SetTimer(this->TimerHandleDepth, this, &ALD48CharacterPlayerBase::UpdateTimerDepth, this->BoostRateUpdateDepth, true);
 	}
 }
 
@@ -114,5 +135,18 @@ void ALD48CharacterPlayerBase::ChangeDefaultBuoyancy()
 	GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleBuoyancy);
 	this->bIsBuoyancyDone = false;
 	GetCharacterMovement()->Buoyancy = this->DefaultPowerBuoyancy;
+	
+	this->CurrentCountDepth = this->DefaultCountDepth;
+	GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleDepth);
+	GetWorld()->GetTimerManager().SetTimer(this->TimerHandleDepth, this, &ALD48CharacterPlayerBase::UpdateTimerDepth, this->DefaultRateUpdateDepth, true);
+}
+
+void ALD48CharacterPlayerBase::UpdateTimerDepth()
+{
+	if (GetCharacterMovement()->IsSwimming())
+	{
+		this->CountDepth += this->CurrentCountDepth;
+		this->OnChangeDepth.Broadcast(this->CountDepth);
+	}
 }
 

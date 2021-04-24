@@ -7,6 +7,7 @@
 #include "Public/LD48DataTypes.h"
 #include "LD48OxygenActorComponent.generated.h"
 
+class ALD48GameModeBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LUDUMEDARE48_API ULD48OxygenActorComponent : public UActorComponent
@@ -33,6 +34,7 @@ protected:
 	
 
 private:
+	ALD48GameModeBase* GameMode;
 	float CurrentOxygen;
 	FTimerHandle TimerHandleOxygen;
 

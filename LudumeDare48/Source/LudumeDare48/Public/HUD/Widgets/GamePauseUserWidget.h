@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "GameOverUserWidget.generated.h"
+#include "GamePauseUserWidget.generated.h"
 
 class UButton;
 /**
  * 
  */
 UCLASS()
-class LUDUMEDARE48_API UGameOverUserWidget : public UUserWidget
+class LUDUMEDARE48_API UGamePauseUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -19,8 +19,13 @@ protected:
 	virtual void NativeOnInitialized() override;
 
 	UPROPERTY(meta = (BindWidget))
+		UButton* ContinueButton;
+	UPROPERTY(meta = (BindWidget))
 		UButton* MainMenuButton;
 private:
 	UFUNCTION()
-	void OnExitLevel();
+		void CallContinueGame();
+
+	UFUNCTION()
+		void CallMainMenu();
 };

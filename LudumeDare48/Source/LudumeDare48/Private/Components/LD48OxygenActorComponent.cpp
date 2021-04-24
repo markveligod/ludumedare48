@@ -3,6 +3,7 @@
 
 #include "Components/LD48OxygenActorComponent.h"
 #include "Public/LD48CharacterPlayerBase.h"
+#include "Public/LD48GameModeBase.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogLD48OxygenComponent, All, All);
 
@@ -25,6 +26,9 @@ void ULD48OxygenActorComponent::BeginPlay()
 	
 	this->CurrentOxygen = this->DefaultOxygen;
 	GetWorld()->GetTimerManager().SetTimer(TimerHandleOxygen, this, &ULD48OxygenActorComponent::DecreaseOxygen, this->DecreaseOxygenRateTime, true);
+	this->GameMode = Cast<ALD48GameModeBase>(GetWorld()->GetAuthGameMode());
+	check(this->GameMode);
+	
 }
 
 void ULD48OxygenActorComponent::DecreaseOxygen()
@@ -36,7 +40,8 @@ void ULD48OxygenActorComponent::DecreaseOxygen()
 	else
 		UE_LOG(LogLD48OxygenComponent, Error, TEXT("Character is nullptr"));
 	//if current oxygen == 0 is death
-	
+	if (this->CurrentOxygen == 0)
+		this->GameMode->OnDeath.Broadcast();
 }
 
 

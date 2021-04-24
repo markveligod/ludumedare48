@@ -11,13 +11,16 @@ void ALD48PlayerHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!this->PlayerHudWidgetClass)
+	if (!this->PlayerHudWidgetClass || !this->GameOverWidgetClass || !this->GamePauseWidgetClass)
 	{
 		UE_LOG(LogLD48PlayerHUD, Error, TEXT("Widgets is nullptr"));
 	}
 
 	this->GameWidgets.Add(EGameState::InProgress, CreateWidget<UUserWidget>(GetWorld(), this->PlayerHudWidgetClass));
+    this->GameWidgets.Add(EGameState::GameOver, CreateWidget<UUserWidget>(GetWorld(), this->GameOverWidgetClass));
+    this->GameWidgets.Add(EGameState::Pause, CreateWidget<UUserWidget>(GetWorld(), this->GamePauseWidgetClass));
 
+	
     for (auto TempGameWidgetPair : this->GameWidgets)
     {
         const auto TempGameValueWidget = TempGameWidgetPair.Value;

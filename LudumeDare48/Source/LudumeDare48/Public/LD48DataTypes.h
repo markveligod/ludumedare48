@@ -18,4 +18,9 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnGameState, EGameState);
 //Delegat for change progress bar oxygen
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnChangeOxygen, float);
 
+//Delegat for change depth value
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnChangeDepth, int32);
+
+//Delegat for on death
+DECLARE_MULTICAST_DELEGATE(FOnDeath);
 

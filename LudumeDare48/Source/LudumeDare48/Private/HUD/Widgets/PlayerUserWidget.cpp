@@ -6,6 +6,7 @@
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "Public/LD48CharacterPlayerBase.h"
+#include "Components/Button.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogPlayerUserWidget, All, All);
 
@@ -15,7 +16,10 @@ void UPlayerUserWidget::NativeOnInitialized()
 
 	const auto TempCharacter = Cast<ALD48CharacterPlayerBase>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (TempCharacter)
+	{
 		TempCharacter->OnChangeOxygen.AddUObject(this, &UPlayerUserWidget::UpdateProgressBarOxygen);
+		TempCharacter->OnChangeDepth.AddUObject(this, &UPlayerUserWidget::UpdateDepthValue);
+	}
 	else
 		UE_LOG(LogPlayerUserWidget, Error, TEXT("Character is nullptr"));
 	
@@ -27,3 +31,9 @@ void UPlayerUserWidget::UpdateProgressBarOxygen(float NewValueOxygen)
 	this->OxygenProgressBar->SetPercent(NewValueOxygen / 100.f);
 	this->OxygenValueTextBlock->SetText(FText::FromString(FString::FromInt(TempValue)));
 }
+
+void UPlayerUserWidget::UpdateDepthValue(int32 NewValueDepth)
+{
+	this->DepthValueTextBlock->SetText(FText::FromString(FString(FString::FromInt(NewValueDepth) + FString("m"))));
+}
+

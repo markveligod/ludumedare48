@@ -17,7 +17,8 @@ class LUDUMEDARE48_API ALD48GameModeBase : public AGameModeBase
 
 public:
 	FOnGameState OnGameState;
-	
+	FOnDeath OnDeath;
+	void ChangeGameState(EGameState NewState);
 	ALD48GameModeBase();
 	
 protected:
@@ -25,5 +26,5 @@ protected:
 	
 private:
 	EGameState CurrentState = EGameState::WaitingToStart;
-	void ChangeGameState(EGameState NewState);
+	void CallGameOverDeath();
 };

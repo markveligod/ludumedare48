@@ -18,6 +18,10 @@ class LUDUMEDARE48_API ALD48PlayerHUD : public AHUD
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
 		TSubclassOf<UUserWidget> PlayerHudWidgetClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> GameOverWidgetClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+		TSubclassOf<UUserWidget> GamePauseWidgetClass;
 
     virtual void BeginPlay() override;
 private:
