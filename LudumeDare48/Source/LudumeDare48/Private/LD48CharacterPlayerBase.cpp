@@ -138,12 +138,14 @@ void ALD48CharacterPlayerBase::PushRightMove()
 {
 	if (GetCharacterMovement()->IsSwimming())
 		AddMovementInput(GetActorRightVector(), this->PowerPush);
+	this->bIsPushing = true;
 }
 
 void ALD48CharacterPlayerBase::PushLeftMove()
 {
 	if (GetCharacterMovement()->IsSwimming())
 		AddMovementInput(GetActorRightVector(), -this->PowerPush);
+	this->bIsPushing = true;
 }
 
 void ALD48CharacterPlayerBase::PushUpMove()
@@ -157,8 +159,8 @@ void ALD48CharacterPlayerBase::PushUpMove()
 		this->CurrentCountDepth = this->HoldCountDepth;
 		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleDepth);
 		GetWorld()->GetTimerManager().SetTimer(this->TimerHandleDepth, this, &ALD48CharacterPlayerBase::UpdateTimerDepth, this->HoldRateUpdateDepth, true);
-
 	}
+	
 }
 
 void ALD48CharacterPlayerBase::PushDownMove()
