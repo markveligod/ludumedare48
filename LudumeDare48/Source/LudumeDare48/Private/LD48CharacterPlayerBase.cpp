@@ -17,7 +17,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogLD48CharacterPlayerBase, All, All);
 // Sets default values
 ALD48CharacterPlayerBase::ALD48CharacterPlayerBase()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Create Default spring arm
@@ -61,7 +61,7 @@ ALD48CharacterPlayerBase::ALD48CharacterPlayerBase()
 	this->FourStaticMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	this->FourStaticMesh->AttachToComponent(GetMesh(), AttachmentRules, this->SocketFourName);
 
-	
+
 }
 
 // Called when the game starts or when spawned
@@ -74,8 +74,9 @@ void ALD48CharacterPlayerBase::BeginPlay()
 	check(this->OxygenActorComponent);
 	check(GetWorld());
 
+	this->StartLocationX = GetActorLocation().X;
+	this->StartLocationZ = GetActorLocation().Z;
 	GetCharacterMovement()->Buoyancy = this->DefaultPowerBuoyancy;
-	this->CurrentCountDepth = this->DefaultCountDepth;
 	GetWorld()->GetTimerManager().SetTimer(this->TimerHandleDepth, this, &ALD48CharacterPlayerBase::UpdateTimerDepth, this->DefaultRateUpdateDepth, true);
 	this->GameMode = Cast<ALD48GameModeBase>(GetWorld()->GetAuthGameMode());
 	this->OnChangeOxygen.Broadcast(this->OxygenActorComponent->GetCurrentOxygen());
@@ -91,7 +92,7 @@ void ALD48CharacterPlayerBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (this->bIsKeyZero)
 	{
-		
+
 		auto CurrentLocationThird = this->ThirdStaticMesh->GetRelativeLocation();
 		auto CurrentLocationFour = this->FourStaticMesh->GetRelativeLocation();
 		CurrentLocationThird.Z += (-150.f * DeltaTime);
@@ -99,6 +100,12 @@ void ALD48CharacterPlayerBase::Tick(float DeltaTime)
 		this->ThirdStaticMesh->SetRelativeLocation(CurrentLocationThird);
 		this->FourStaticMesh->SetRelativeLocation(CurrentLocationFour);
 	}
+  if (GetActorLocation().X != this->StartLocationX)
+  {
+	  auto CurrentLocal = GetActorLocation();
+	  CurrentLocal.X = this->StartLocationX;
+	  SetActorLocation(CurrentLocal);
+  }
 }
 
 // Called to bind functionality to input
@@ -107,10 +114,9 @@ void ALD48CharacterPlayerBase::SetupPlayerInputComponent(UInputComponent* Player
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	if (PlayerInputComponent)
 	{
-		PlayerInputComponent->BindAction("PushRight", IE_Pressed, this, &ALD48CharacterPlayerBase::PushRightMove);
-		PlayerInputComponent->BindAction("PushLeft", IE_Pressed, this, &ALD48CharacterPlayerBase::PushLeftMove);
 		PlayerInputComponent->BindAction("MoveHold", IE_Pressed, this, &ALD48CharacterPlayerBase::PushUpMove);
 		PlayerInputComponent->BindAction("MoveBoost", IE_Pressed, this, &ALD48CharacterPlayerBase::PushDownMove);
+		PlayerInputComponent->BindAxis("MoveRight", this, &ALD48CharacterPlayerBase::RightMove);
 	}
 	else
 	{
@@ -132,7 +138,7 @@ void ALD48CharacterPlayerBase::DecreaseCountKey()
 		GetCharacterMovement()->Buoyancy = 1.1f;
 		this->bIsKeyZero = true;
 		this->GameMode->OnDeath.Broadcast();
-		
+
 	}
 }
 
@@ -151,17 +157,12 @@ void ALD48CharacterPlayerBase::CallChangeOxygen(float Amount)
 	this->OxygenActorComponent->AppEndOxygen(Amount);
 }
 
-void ALD48CharacterPlayerBase::PushRightMove()
+void ALD48CharacterPlayerBase::RightMove(float Amount)
 {
+	if (Amount == 0)
+		return;
 	if (GetCharacterMovement()->IsSwimming())
-		AddMovementInput(GetActorRightVector(), this->PowerPush);
-	this->bIsPushing = true;
-}
-
-void ALD48CharacterPlayerBase::PushLeftMove()
-{
-	if (GetCharacterMovement()->IsSwimming())
-		AddMovementInput(GetActorRightVector(), -this->PowerPush);
+		AddMovementInput(GetActorRightVector(), Amount);
 	this->bIsPushing = true;
 }
 
@@ -173,11 +174,8 @@ void ALD48CharacterPlayerBase::PushUpMove()
 		this->bIsBuoyancyDone = true;
 		GetWorld()->GetTimerManager().SetTimer(TimerHandleBuoyancy, this, &ALD48CharacterPlayerBase::ChangeDefaultBuoyancy, 5.f, false);
 
-		this->CurrentCountDepth = this->HoldCountDepth;
-		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleDepth);
-		GetWorld()->GetTimerManager().SetTimer(this->TimerHandleDepth, this, &ALD48CharacterPlayerBase::UpdateTimerDepth, this->HoldRateUpdateDepth, true);
 	}
-	
+
 }
 
 void ALD48CharacterPlayerBase::PushDownMove()
@@ -187,9 +185,6 @@ void ALD48CharacterPlayerBase::PushDownMove()
 		GetCharacterMovement()->Buoyancy = this->BoostPowerBuoyancy;
 		this->bIsBuoyancyDone = true;
 		GetWorld()->GetTimerManager().SetTimer(TimerHandleBuoyancy, this, &ALD48CharacterPlayerBase::ChangeDefaultBuoyancy, 2.f, false);
-		this->CurrentCountDepth = this->BoostCountDepth;
-		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleDepth);
-		GetWorld()->GetTimerManager().SetTimer(this->TimerHandleDepth, this, &ALD48CharacterPlayerBase::UpdateTimerDepth, this->BoostRateUpdateDepth, true);
 	}
 }
 
@@ -198,17 +193,13 @@ void ALD48CharacterPlayerBase::ChangeDefaultBuoyancy()
 	GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleBuoyancy);
 	this->bIsBuoyancyDone = false;
 	GetCharacterMovement()->Buoyancy = this->DefaultPowerBuoyancy;
-	
-	this->CurrentCountDepth = this->DefaultCountDepth;
-	GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleDepth);
-	GetWorld()->GetTimerManager().SetTimer(this->TimerHandleDepth, this, &ALD48CharacterPlayerBase::UpdateTimerDepth, this->DefaultRateUpdateDepth, true);
 }
 
 void ALD48CharacterPlayerBase::UpdateTimerDepth()
 {
 	if (GetCharacterMovement()->IsSwimming())
 	{
-		this->CountDepth += this->CurrentCountDepth;
+		this->CountDepth = (this->StartLocationZ - GetActorLocation().Z) / 100;
 		this->OnChangeDepth.Broadcast(this->CountDepth);
 	}
 }
@@ -231,7 +222,7 @@ void ALD48CharacterPlayerBase::FreeStaticMesh(int Key)
 }
 
 void ALD48CharacterPlayerBase::OnOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                                                  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	const auto TempItem = Cast<ALD48BaseItemsActor>(OtherActor);
 	if (TempItem)
@@ -258,6 +249,6 @@ void ALD48CharacterPlayerBase::OnOverlapComponent(UPrimitiveComponent* Overlappe
 	{
 		UE_LOG(LogLD48CharacterPlayerBase, Error, TEXT("Character is nullptr"));
 	}
-	
+
 }
 

@@ -76,18 +76,8 @@ protected:
 		float HoldPowerBuoyancy = 0.9f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Depth Editor")
-		float DefaultRateUpdateDepth = 0.5f;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Depth Editor")
-		float BoostRateUpdateDepth = 0.1f;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Depth Editor")
-		float HoldRateUpdateDepth = 1.f;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Depth Editor")
-		int32 DefaultCountDepth = 4;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Depth Editor")
-		int32 HoldCountDepth = 2;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Depth Editor")
-		int32 BoostCountDepth = 6;
-
+		float DefaultRateUpdateDepth = 0.1f;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Socket")
 		FName SocketFirstName = "FirstSocket";
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Socket")
@@ -101,13 +91,14 @@ protected:
 private:
 	int32 CountKeys = 3;
 	bool bIsKeyZero = false;
-	int32 CountDepth = 0;
-	int32 CurrentCountDepth;
+	float CountDepth = 0.f;
 	bool bIsBuoyancyDone = false;	
 	ALD48GameModeBase* GameMode;
 
-	void PushRightMove();
-	void PushLeftMove();
+	float StartLocationX;
+	float StartLocationZ;
+
+	void RightMove(float Amount);
 	void PushUpMove();
 	void PushDownMove();
 	void ChangeDefaultBuoyancy();
