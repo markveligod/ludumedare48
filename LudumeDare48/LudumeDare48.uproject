@@ -1,17 +1,18 @@
 {
-  "Category": "",
-  "Description": "",
-  "EngineAssociation": "4.26",
-  "FileVersion": 3,
-  "Modules": [
-    {
-      "AdditionalDependencies": [
-        "Engine",
-        "UMG"
-      ],
-      "LoadingPhase": "Default",
-      "Name": "LudumeDare48",
-      "Type": "Runtime"
-    }
-  ]
+	"FileVersion": 3,
+	"EngineAssociation": "4.26",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "LudumeDare48",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine",
+				"UMG",
+				"AIModule"
+			]
+		}
+	]
 }
