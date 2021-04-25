@@ -13,6 +13,7 @@
 #include "MSBJMenuWidget.generated.h"
 
 class UButton;
+class UTextBlock;
 /**
  * 
  */
@@ -34,6 +35,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 		UButton* QuitButton;
 
+	UPROPERTY(meta = (BindWidget))
+		UTextBlock* ResultTotalDepthTextBlock;
+
 	UPROPERTY(Transient, meta = (BindWidgetAnim))
 		UWidgetAnimation* EndAnimation;
 
@@ -50,4 +54,6 @@ private:
 
 	UFUNCTION()
 		void OnQuitGame();
+
+	void UpdateResultDepth();
 };

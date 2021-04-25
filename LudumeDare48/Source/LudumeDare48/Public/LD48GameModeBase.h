@@ -25,6 +25,7 @@ protected:
 	virtual void StartPlay() override;
 	
 private:
+	void UpdateTotalDepth();
 	EGameState CurrentState = EGameState::WaitingToStart;
 	void CallGameOverDeath();
 };

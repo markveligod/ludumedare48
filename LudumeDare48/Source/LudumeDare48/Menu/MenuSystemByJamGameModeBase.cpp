@@ -28,6 +28,7 @@ void AMenuSystemByJamGameModeBase::StartPlay()
 	Super::StartPlay();
 	this->SetStartPlaySettings();
 	this->SetGameState(this->CurrentState);
+	this->OnSetCountTotalDepthResult.Broadcast();
 }
 
 const EMSBJGameMenuState& AMenuSystemByJamGameModeBase::GetCurrentState() const
