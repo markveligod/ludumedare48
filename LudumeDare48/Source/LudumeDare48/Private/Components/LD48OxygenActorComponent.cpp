@@ -2,6 +2,8 @@
 
 
 #include "Components/LD48OxygenActorComponent.h"
+
+#include "Camera/CameraComponent.h"
 #include "Public/LD48CharacterPlayerBase.h"
 #include "Public/LD48GameModeBase.h"
 
@@ -64,6 +66,7 @@ void ULD48OxygenActorComponent::DecreaseOxygen()
 	//if current oxygen == 0 is death
 	if (this->CurrentOxygen == 0)
 	{
+		TempCharacter->CameraComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 		this->GameMode->OnDeath.Broadcast();
 		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleOxygen);
 	}

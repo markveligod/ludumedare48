@@ -29,6 +29,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void DecreaseCountKey();
+	UFUNCTION(BlueprintCallable)
 	int32 GetCountKeys() const;
 	int32 GetCountDepth() const;
 
@@ -40,6 +41,8 @@ public:
 	FOnChangeOxygen OnChangeOxygen;
 	FOnChangeDepth OnChangeDepth;
 	FOnChangeKeys OnChangeKeys;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UCameraComponent* CameraComponent;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -53,8 +56,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		UStaticMeshComponent* FourStaticMesh;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		UCameraComponent* CameraComponent;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		USpringArmComponent* SpringArmComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -95,6 +97,7 @@ protected:
 
 private:
 	int32 CountKeys = 3;
+	bool bIsKeyZero = false;
 	int32 CountDepth = 0;
 	int32 CurrentCountDepth;
 	bool bIsBuoyancyDone = false;
