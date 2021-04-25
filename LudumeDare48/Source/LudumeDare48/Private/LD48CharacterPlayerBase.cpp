@@ -11,7 +11,6 @@
 #include "Components/LD48OxygenActorComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Items/LD48BaseItemsActor.h"
-#include "Particles/ParticleSystemComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogLD48CharacterPlayerBase, All, All);
 
@@ -241,9 +240,6 @@ void ALD48CharacterPlayerBase::OnOverlapComponent(UPrimitiveComponent* Overlappe
 		else if (TempItem->bIsOther)
 		{
 			CallChangeOxygen(-TempItem->DamageValueOxygen);
-			FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
-
-			this->ParticleExpDynimet->AttachToComponent(TempItem->StaticMeshComponent, AttachmentRules);
 		}
 		else
 		{

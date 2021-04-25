@@ -12,7 +12,6 @@ class UStaticMeshComponent;
 class USpringArmComponent;
 class ULD48OxygenActorComponent;
 class ALD48GameModeBase;
-class UParticleSystemComponent;
 
 UCLASS()
 class LUDUMEDARE48_API ALD48CharacterPlayerBase : public ACharacter
@@ -87,9 +86,6 @@ protected:
 		FName SocketThirdName = "ThirdSocket";
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Socket")
 		FName SocketFourName = "FourSocket";
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
-		UParticleSystemComponent* ParticleExpDynimet;
 
 
 private:
