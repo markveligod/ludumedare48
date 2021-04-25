@@ -44,6 +44,8 @@ void ALD48CharacterPlayerBase::BeginPlay()
 	this->CurrentCountDepth = this->DefaultCountDepth;
 	GetWorld()->GetTimerManager().SetTimer(this->TimerHandleDepth, this, &ALD48CharacterPlayerBase::UpdateTimerDepth, this->DefaultRateUpdateDepth, true);
 	this->GameMode = Cast<ALD48GameModeBase>(GetWorld()->GetAuthGameMode());
+	this->OnChangeOxygen.Broadcast(this->OxygenActorComponent->GetCurrentOxygen());
+	this->OnChangeKeys.Broadcast(this->CountKeys);
 }
 
 
@@ -75,8 +77,9 @@ void ALD48CharacterPlayerBase::SetupPlayerInputComponent(UInputComponent* Player
 void ALD48CharacterPlayerBase::DecreaseCountKey()
 {
 	this->CountKeys--;
+	this->OnChangeKeys.Broadcast(this->CountKeys);
 	//if count keys == 0 win
-	if (this->CountDepth == 0)
+	if (this->CountKeys == 0)
 		this->GameMode->OnDeath.Broadcast();
 }
 
@@ -88,6 +91,11 @@ int32 ALD48CharacterPlayerBase::GetCountKeys() const
 int32 ALD48CharacterPlayerBase::GetCountDepth() const
 {
 	return (this->CountDepth);
+}
+
+void ALD48CharacterPlayerBase::CallChangeOxygen(float Amount)
+{
+	this->OxygenActorComponent->AppEndOxygen(Amount);
 }
 
 void ALD48CharacterPlayerBase::PushRightMove()

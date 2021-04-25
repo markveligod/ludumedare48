@@ -17,6 +17,8 @@ class LUDUMEDARE48_API ULD48OxygenActorComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	ULD48OxygenActorComponent();
+	void AppEndOxygen(float Amount);
+	float GetCurrentOxygen() const;
 
 protected:
 	// Called when the game starts

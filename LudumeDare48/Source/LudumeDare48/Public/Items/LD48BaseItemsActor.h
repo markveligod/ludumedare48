@@ -25,15 +25,17 @@ protected:
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Components")
 		UStaticMeshComponent* StaticMeshComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components", meta = (ClampMin = "0.1", ClampMax = "100.0"))
+		float PowerRotator = 5.f;
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor")
 		bool bIsKey = false;
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor")
 		bool bIsOxygen = false;
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor", meta = (EditCondition = "bIsOxygen"))
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor", meta = (EditCondition = "bIsOxygen", ClampMin = "0.1", ClampMax = "50.0"))
 		float HealValueOxygen = 25.f;
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor")
 		bool bIsOther = false;
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor", meta = (EditCondition = "bIsOther"))
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor", meta = (EditCondition = "bIsOther", ClampMin = "0.1", ClampMax = "50.0"))
 		float DamageValueOxygen = 10.f;
 
 

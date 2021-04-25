@@ -24,6 +24,8 @@ void ALD48BaseItemsActor::BeginPlay()
 {
 	Super::BeginPlay();
 	check(this->StaticMeshComponent);
+
+	
 }
 
 void ALD48BaseItemsActor::OnHitActor(UPrimitiveComponent* HitComponent, AActor* OtherActor,
@@ -34,15 +36,15 @@ void ALD48BaseItemsActor::OnHitActor(UPrimitiveComponent* HitComponent, AActor* 
 	{
 		if (this->bIsKey)
 		{
-			
+			TempCharacter->DecreaseCountKey();
 		}
 		else if (this->bIsOxygen)
 		{
-			
+			TempCharacter->CallChangeOxygen(this->HealValueOxygen);
 		}
 		else if (this->bIsOther)
 		{
-			
+			TempCharacter->CallChangeOxygen(-this->DamageValueOxygen);
 		}
 		else
 		{
@@ -53,12 +55,16 @@ void ALD48BaseItemsActor::OnHitActor(UPrimitiveComponent* HitComponent, AActor* 
 	{
 		UE_LOG(LogLD48BaseItemsActor, Error, TEXT("Character is nullptr"));
 	}
+	Destroy();
 }
 
 // Called every frame
 void ALD48BaseItemsActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
+	auto CurrRotation = GetActorRotation();
+	CurrRotation.Yaw += (this->PowerRotator * DeltaTime);
+	SetActorRotation(CurrRotation);
 }
 

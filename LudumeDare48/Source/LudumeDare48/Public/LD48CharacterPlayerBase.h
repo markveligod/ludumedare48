@@ -31,8 +31,11 @@ public:
 	int32 GetCountKeys() const;
 	int32 GetCountDepth() const;
 
+	void CallChangeOxygen(float Amount);
+
 	FOnChangeOxygen OnChangeOxygen;
 	FOnChangeDepth OnChangeDepth;
+	FOnChangeKeys OnChangeKeys;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

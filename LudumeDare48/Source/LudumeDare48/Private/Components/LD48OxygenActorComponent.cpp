@@ -31,6 +31,28 @@ void ULD48OxygenActorComponent::BeginPlay()
 	
 }
 
+void ULD48OxygenActorComponent::AppEndOxygen(float Amount)
+{
+	this->CurrentOxygen = FMath::Clamp(this->CurrentOxygen + Amount, 0.f, this->DefaultOxygen);
+	const auto TempCharacter = Cast<ALD48CharacterPlayerBase>(GetOwner());
+	if (TempCharacter)
+		TempCharacter->OnChangeOxygen.Broadcast(this->CurrentOxygen);
+	else
+		UE_LOG(LogLD48OxygenComponent, Error, TEXT("Character is nullptr"));
+	//if current oxygen == 0 is death
+	if (this->CurrentOxygen == 0)
+	{
+		this->GameMode->OnDeath.Broadcast();
+		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleOxygen);
+	}
+
+}
+
+float ULD48OxygenActorComponent::GetCurrentOxygen() const
+{
+	return (this->CurrentOxygen);
+}
+
 void ULD48OxygenActorComponent::DecreaseOxygen()
 {
 	this->CurrentOxygen = FMath::Clamp(this->CurrentOxygen - this->ExpenseOxygen, 0.f, this->DefaultOxygen);
@@ -41,7 +63,10 @@ void ULD48OxygenActorComponent::DecreaseOxygen()
 		UE_LOG(LogLD48OxygenComponent, Error, TEXT("Character is nullptr"));
 	//if current oxygen == 0 is death
 	if (this->CurrentOxygen == 0)
+	{
 		this->GameMode->OnDeath.Broadcast();
+		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleOxygen);
+	}
 }
 
 

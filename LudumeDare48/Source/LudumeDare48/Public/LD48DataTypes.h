@@ -21,6 +21,9 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnChangeOxygen, float);
 //Delegat for change depth value
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnChangeDepth, int32);
 
+//Delegat for change depth value
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnChangeKeys, int32);
+
 //Delegat for on death
 DECLARE_MULTICAST_DELEGATE(FOnDeath);
 
