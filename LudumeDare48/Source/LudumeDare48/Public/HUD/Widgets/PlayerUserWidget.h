@@ -21,18 +21,13 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 		UProgressBar* OxygenProgressBar;
 	UPROPERTY(meta = (BindWidget))
-		UTextBlock* OxygenValueTextBlock;
-	UPROPERTY(meta = (BindWidget))
 		UTextBlock* DepthValueTextBlock;
-	UPROPERTY(meta = (BindWidget))
-		UTextBlock* ValueKeysTextBlock;
 
 	virtual void NativeOnInitialized() override;
 
 private:
 	void UpdateProgressBarOxygen(float NewValueOxygen);
 	void UpdateDepthValue(int32 NewValueDepth);
-	void UpdateKeysValue(int32 NewValueKeys);
 };
 
 

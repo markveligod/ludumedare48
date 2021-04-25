@@ -18,7 +18,10 @@ public:
 	ALD48BaseItemsActor();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Components")
+		UStaticMeshComponent* StaticMeshComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components", meta = (ClampMin = "0.1", ClampMax = "100.0"))
+		float PowerRotator = 50.f;
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor")
 		bool bIsKey = false;
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor")
@@ -33,10 +36,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Components")
-		UStaticMeshComponent* StaticMeshComponent;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components", meta = (ClampMin = "0.1", ClampMax = "100.0"))
-		float PowerRotator = 50.f;
+	
 
 private:
 

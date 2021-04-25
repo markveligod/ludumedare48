@@ -11,6 +11,7 @@
 #include "Components/LD48OxygenActorComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Items/LD48BaseItemsActor.h"
+#include "Particles/ParticleSystemComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogLD48CharacterPlayerBase, All, All);
 
@@ -39,6 +40,21 @@ ALD48CharacterPlayerBase::ALD48CharacterPlayerBase()
 	this->ThirdStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("Low");
 	this->FourStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("Four");
 
+
+	this->ParticleExpDynimet = CreateDefaultSubobject<UParticleSystemComponent>("Particle exploser");
+}
+
+// Called when the game starts or when spawned
+void ALD48CharacterPlayerBase::BeginPlay()
+{
+	Super::BeginPlay();
+	check(this->SpringArmComponent);
+	check(this->CameraComponent)
+	check(GetCharacterMovement());
+	check(this->OxygenActorComponent);
+	check(GetWorld());
+	check(this->ParticleExpDynimet);
+
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
 
 	this->FirstStaticMesh->SetSimulatePhysics(false);
@@ -60,19 +76,6 @@ ALD48CharacterPlayerBase::ALD48CharacterPlayerBase()
 	this->FourStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	this->FourStaticMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	this->FourStaticMesh->AttachToComponent(GetMesh(), AttachmentRules, this->SocketFourName);
-
-
-}
-
-// Called when the game starts or when spawned
-void ALD48CharacterPlayerBase::BeginPlay()
-{
-	Super::BeginPlay();
-	check(this->SpringArmComponent);
-	check(this->CameraComponent)
-	check(GetCharacterMovement());
-	check(this->OxygenActorComponent);
-	check(GetWorld());
 
 	this->StartLocationX = GetActorLocation().X;
 	this->StartLocationZ = GetActorLocation().Z;
@@ -238,6 +241,9 @@ void ALD48CharacterPlayerBase::OnOverlapComponent(UPrimitiveComponent* Overlappe
 		else if (TempItem->bIsOther)
 		{
 			CallChangeOxygen(-TempItem->DamageValueOxygen);
+			FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
+
+			this->ParticleExpDynimet->AttachToComponent(TempItem->StaticMeshComponent, AttachmentRules);
 		}
 		else
 		{

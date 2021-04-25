@@ -19,7 +19,6 @@ void UPlayerUserWidget::NativeOnInitialized()
 	{
 		TempCharacter->OnChangeOxygen.AddUObject(this, &UPlayerUserWidget::UpdateProgressBarOxygen);
 		TempCharacter->OnChangeDepth.AddUObject(this, &UPlayerUserWidget::UpdateDepthValue);
-		TempCharacter->OnChangeKeys.AddUObject(this, &UPlayerUserWidget::UpdateKeysValue);
 	}
 	else
 		UE_LOG(LogPlayerUserWidget, Error, TEXT("Character is nullptr"));
@@ -30,16 +29,9 @@ void UPlayerUserWidget::UpdateProgressBarOxygen(float NewValueOxygen)
 {
 	int TempValue = NewValueOxygen;
 	this->OxygenProgressBar->SetPercent(NewValueOxygen / 100.f);
-	this->OxygenValueTextBlock->SetText(FText::FromString(FString::FromInt(TempValue)));
 }
 
 void UPlayerUserWidget::UpdateDepthValue(int32 NewValueDepth)
 {
 	this->DepthValueTextBlock->SetText(FText::FromString(FString(FString::FromInt(NewValueDepth) + FString("m"))));
 }
-
-void UPlayerUserWidget::UpdateKeysValue(int32 NewValueKeys)
-{
-	this->ValueKeysTextBlock->SetText(FText::FromString(FString::FromInt(NewValueKeys)));
-}
-
