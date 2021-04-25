@@ -89,7 +89,17 @@ void ALD48CharacterPlayerBase::BeginPlay()
 void ALD48CharacterPlayerBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (this->bIsKeyZero)
+	{
+		this->CameraComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		GetCharacterMovement()->Buoyancy = 1.1f;
+		auto CurrentLocationThird = this->ThirdStaticMesh->GetRelativeLocation();
+		auto CurrentLocationFour = this->FourStaticMesh->GetRelativeLocation();
+		CurrentLocationThird.Z += (-150.f * DeltaTime);
+		CurrentLocationFour.Z += (-150.f * DeltaTime);
+		this->ThirdStaticMesh->SetRelativeLocation(CurrentLocationThird);
+		this->FourStaticMesh->SetRelativeLocation(CurrentLocationFour);
+	}
 }
 
 // Called to bind functionality to input
@@ -116,7 +126,11 @@ void ALD48CharacterPlayerBase::DecreaseCountKey()
 	this->OnChangeKeys.Broadcast(this->CountKeys);
 	//if count keys == 0 win
 	if (this->CountKeys == 0)
+	{
+		this->bIsKeyZero = true;		
 		this->GameMode->OnDeath.Broadcast();
+		
+	}
 }
 
 int32 ALD48CharacterPlayerBase::GetCountKeys() const
@@ -169,7 +183,7 @@ void ALD48CharacterPlayerBase::PushDownMove()
 	{
 		GetCharacterMovement()->Buoyancy = this->BoostPowerBuoyancy;
 		this->bIsBuoyancyDone = true;
-		GetWorld()->GetTimerManager().SetTimer(TimerHandleBuoyancy, this, &ALD48CharacterPlayerBase::ChangeDefaultBuoyancy, 5.f, false);
+		GetWorld()->GetTimerManager().SetTimer(TimerHandleBuoyancy, this, &ALD48CharacterPlayerBase::ChangeDefaultBuoyancy, 2.f, false);
 		this->CurrentCountDepth = this->BoostCountDepth;
 		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleDepth);
 		GetWorld()->GetTimerManager().SetTimer(this->TimerHandleDepth, this, &ALD48CharacterPlayerBase::UpdateTimerDepth, this->BoostRateUpdateDepth, true);
