@@ -19,4 +19,5 @@ enum class EMSBJGameMenuState : uint8
 };
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnGameMenuStateChangedSignature, EMSBJGameMenuState);
+DECLARE_MULTICAST_DELEGATE(FOnSetCountTotalDepthResult);
 

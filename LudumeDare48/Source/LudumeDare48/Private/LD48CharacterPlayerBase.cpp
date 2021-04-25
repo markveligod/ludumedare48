@@ -91,8 +91,7 @@ void ALD48CharacterPlayerBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (this->bIsKeyZero)
 	{
-		this->CameraComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		GetCharacterMovement()->Buoyancy = 1.1f;
+		
 		auto CurrentLocationThird = this->ThirdStaticMesh->GetRelativeLocation();
 		auto CurrentLocationFour = this->FourStaticMesh->GetRelativeLocation();
 		CurrentLocationThird.Z += (-150.f * DeltaTime);
@@ -127,7 +126,11 @@ void ALD48CharacterPlayerBase::DecreaseCountKey()
 	//if count keys == 0 win
 	if (this->CountKeys == 0)
 	{
-		this->bIsKeyZero = true;		
+		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleDepth);
+		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleBuoyancy);
+		this->CameraComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		GetCharacterMovement()->Buoyancy = 1.1f;
+		this->bIsKeyZero = true;
 		this->GameMode->OnDeath.Broadcast();
 		
 	}

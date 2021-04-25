@@ -69,6 +69,8 @@ void ULD48OxygenActorComponent::DecreaseOxygen()
 		TempCharacter->CameraComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 		this->GameMode->OnDeath.Broadcast();
 		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleOxygen);
+		GetWorld()->GetTimerManager().ClearTimer(TempCharacter->TimerHandleBuoyancy);
+		GetWorld()->GetTimerManager().ClearTimer(TempCharacter->TimerHandleDepth);
 	}
 }
 

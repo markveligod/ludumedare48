@@ -24,7 +24,8 @@ class LUDUMEDARE48_API AMenuSystemByJamGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 public:
 	FOnGameMenuStateChangedSignature OnGameMenuStateChangedSignature;
-
+	FOnSetCountTotalDepthResult OnSetCountTotalDepthResult;
+	
 	AMenuSystemByJamGameModeBase();
 	
 	virtual void StartPlay() override;

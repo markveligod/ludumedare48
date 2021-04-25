@@ -24,4 +24,6 @@ public:
 		FName NameStartLevel = NAME_None;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Levels Editor")
 		FName NameMenuLevel = NAME_None;
+	UPROPERTY(BlueprintReadOnly, Category = "Count Total")
+		int32 TotalDepth = 0;
 };

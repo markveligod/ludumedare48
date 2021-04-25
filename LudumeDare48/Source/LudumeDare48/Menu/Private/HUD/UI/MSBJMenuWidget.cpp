@@ -12,6 +12,8 @@
 #include "Menu/MenuSystemByJamGameModeBase.h"
 #include "Menu/Public/MSBJGameInstance.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "MSBJGameInstance.h"
+#include "Components/TextBlock.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogMSBJMenuWidget, All, All);
 
@@ -27,6 +29,14 @@ void UMSBJMenuWidget::NativeOnInitialized()
 	this->OptionsButton->OnClicked.AddDynamic(this, &UMSBJMenuWidget::OnOptionsGame);
 	this->CreditsButton->OnClicked.AddDynamic(this, &UMSBJMenuWidget::OnCreditsGame);
 	this->QuitButton->OnClicked.AddDynamic(this, &UMSBJMenuWidget::OnQuitGame);
+
+	const auto GameMode = GetCurrentGameMode();
+	if (!GameMode)
+	{
+		UE_LOG(LogMSBJMenuWidget, Error, TEXT("Game mode is nullptr"));
+		return;
+	}
+	GameMode->OnSetCountTotalDepthResult.AddUObject(this, &UMSBJMenuWidget::UpdateResultDepth);
 }
 
 void UMSBJMenuWidget::OnStartGame()
@@ -65,4 +75,14 @@ void UMSBJMenuWidget::OnQuitGame()
 	PlayAnimation(this->EndAnimation);
 	UKismetSystemLibrary::QuitGame(this, GetOwningPlayer(), EQuitPreference::Quit, true);
 	UE_LOG(LogMSBJMenuWidget, Display, TEXT("Goodbye!"));
+}
+
+void UMSBJMenuWidget::UpdateResultDepth()
+{
+	const auto GameInst = Cast<UMSBJGameInstance>(GetWorld()->GetGameInstance());
+	if (GameInst)
+	{
+		UE_LOG(LogMSBJMenuWidget, Warning, TEXT("Total: %d"), GameInst->TotalDepth);
+		this->ResultTotalDepthTextBlock->SetText(FText::FromString(FString(FString::FromInt(GameInst->TotalDepth) + FString("m"))));
+	}
 }

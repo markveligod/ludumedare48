@@ -43,6 +43,9 @@ public:
 	FOnChangeKeys OnChangeKeys;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		UCameraComponent* CameraComponent;
+
+	FTimerHandle TimerHandleBuoyancy;
+	FTimerHandle TimerHandleDepth;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -100,13 +103,9 @@ private:
 	bool bIsKeyZero = false;
 	int32 CountDepth = 0;
 	int32 CurrentCountDepth;
-	bool bIsBuoyancyDone = false;
-	FTimerHandle TimerHandleBuoyancy;
-	FTimerHandle TimerHandleDepth;
+	bool bIsBuoyancyDone = false;	
 	ALD48GameModeBase* GameMode;
-	
 
-	
 	void PushRightMove();
 	void PushLeftMove();
 	void PushUpMove();
