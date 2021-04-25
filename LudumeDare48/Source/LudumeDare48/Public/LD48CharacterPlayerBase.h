@@ -32,6 +32,9 @@ public:
 	int32 GetCountKeys() const;
 	int32 GetCountDepth() const;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsPushing = false;
+
 	void CallChangeOxygen(float Amount);
 
 	FOnChangeOxygen OnChangeOxygen;
@@ -98,6 +101,7 @@ private:
 	FTimerHandle TimerHandleBuoyancy;
 	FTimerHandle TimerHandleDepth;
 	ALD48GameModeBase* GameMode;
+	
 
 	
 	void PushRightMove();
