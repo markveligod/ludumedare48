@@ -7,8 +7,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/LD48OxygenActorComponent.h"
 #include "Public/LD48GameModeBase.h"
+#include "Items/LD48BaseItemsActor.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogLD48CharacterPlayerBase, All, All);
 
@@ -28,6 +30,8 @@ ALD48CharacterPlayerBase::ALD48CharacterPlayerBase()
 
 	//create oxygen component
 	this->OxygenActorComponent = CreateDefaultSubobject<ULD48OxygenActorComponent>("Oxygen Component");
+
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ALD48CharacterPlayerBase::OnOverlapComponent);
 }
 
 // Called when the game starts or when spawned
@@ -156,5 +160,36 @@ void ALD48CharacterPlayerBase::UpdateTimerDepth()
 		this->CountDepth += this->CurrentCountDepth;
 		this->OnChangeDepth.Broadcast(this->CountDepth);
 	}
+}
+
+void ALD48CharacterPlayerBase::OnOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	const auto TempItem = Cast<ALD48BaseItemsActor>(OtherActor);
+	if (TempItem)
+	{
+		if (TempItem->bIsKey)
+		{
+			DecreaseCountKey();
+		}
+		else if (TempItem->bIsOxygen)
+		{
+			CallChangeOxygen(TempItem->HealValueOxygen);
+		}
+		else if (TempItem->bIsOther)
+		{
+			CallChangeOxygen(-TempItem->DamageValueOxygen);
+		}
+		else
+		{
+			UE_LOG(LogLD48CharacterPlayerBase, Error, TEXT("bool variable is all false"))
+		}
+		TempItem->Destroy();
+	}
+	else
+	{
+		UE_LOG(LogLD48CharacterPlayerBase, Error, TEXT("Character is nullptr"));
+	}
+	
 }
 

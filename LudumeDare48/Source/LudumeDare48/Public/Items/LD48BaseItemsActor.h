@@ -19,14 +19,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Components")
-		UStaticMeshComponent* StaticMeshComponent;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components", meta = (ClampMin = "0.1", ClampMax = "100.0"))
-		float PowerRotator = 5.f;
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor")
 		bool bIsKey = false;
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor")
@@ -37,12 +29,15 @@ protected:
 		bool bIsOther = false;
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor", meta = (EditCondition = "bIsOther", ClampMin = "0.1", ClampMax = "50.0"))
 		float DamageValueOxygen = 10.f;
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Components")
+		UStaticMeshComponent* StaticMeshComponent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components", meta = (ClampMin = "0.1", ClampMax = "100.0"))
+		float PowerRotator = 50.f;
 
 private:
-	UFUNCTION()
-	void OnHitActor(UPrimitiveComponent* HitComponent,
-			AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-	
 
 };

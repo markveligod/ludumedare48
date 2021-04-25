@@ -16,7 +16,7 @@ ALD48BaseItemsActor::ALD48BaseItemsActor()
 	//create static mesh components
 	this->StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("Static Mesh");
 	this->StaticMeshComponent->SetupAttachment(GetRootComponent());
-	this->StaticMeshComponent->OnComponentHit.AddDynamic(this, &ALD48BaseItemsActor::OnHitActor);
+	this->StaticMeshComponent->SetRelativeScale3D(FVector(2.f));
 }
 
 // Called when the game starts or when spawned
@@ -28,43 +28,13 @@ void ALD48BaseItemsActor::BeginPlay()
 	
 }
 
-void ALD48BaseItemsActor::OnHitActor(UPrimitiveComponent* HitComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-	const auto TempCharacter = Cast<ALD48CharacterPlayerBase>(OtherActor);
-	if (TempCharacter)
-	{
-		if (this->bIsKey)
-		{
-			TempCharacter->DecreaseCountKey();
-		}
-		else if (this->bIsOxygen)
-		{
-			TempCharacter->CallChangeOxygen(this->HealValueOxygen);
-		}
-		else if (this->bIsOther)
-		{
-			TempCharacter->CallChangeOxygen(-this->DamageValueOxygen);
-		}
-		else
-		{
-			UE_LOG(LogLD48BaseItemsActor, Error, TEXT("bool variable is all false"))
-		}
-	}
-	else
-	{
-		UE_LOG(LogLD48BaseItemsActor, Error, TEXT("Character is nullptr"));
-	}
-	Destroy();
-}
-
 // Called every frame
 void ALD48BaseItemsActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	auto CurrRotation = GetActorRotation();
+	auto CurrRotation = this->StaticMeshComponent->GetRelativeRotation();
 	CurrRotation.Yaw += (this->PowerRotator * DeltaTime);
-	SetActorRotation(CurrRotation);
+	this->StaticMeshComponent->SetRelativeRotation(CurrRotation);
 }
 

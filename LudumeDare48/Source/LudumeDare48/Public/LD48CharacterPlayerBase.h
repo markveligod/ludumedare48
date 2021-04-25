@@ -88,4 +88,7 @@ private:
 	void PushDownMove();
 	void ChangeDefaultBuoyancy();
 	void UpdateTimerDepth();
+
+	UFUNCTION()
+		void OnOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };
