@@ -8,6 +8,7 @@
 #include "LD48CharacterPlayerBase.generated.h"
 
 class UCameraComponent;
+class UStaticMeshComponent;
 class USpringArmComponent;
 class ULD48OxygenActorComponent;
 class ALD48GameModeBase;
@@ -41,10 +42,18 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UStaticMeshComponent* FirstStaticMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UStaticMeshComponent* SecondStaticMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UStaticMeshComponent* ThirdStaticMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		UStaticMeshComponent* FourStaticMesh;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		UCameraComponent* CameraComponent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		USpringArmComponent* SpringArmComponent;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		ULD48OxygenActorComponent* OxygenActorComponent;
 
@@ -70,7 +79,15 @@ protected:
 		int32 HoldCountDepth = 2;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Depth Editor")
 		int32 BoostCountDepth = 6;
-		
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Socket")
+		FName SocketFirstName = "FirstSocket";
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Socket")
+		FName SocketSecondName = "SecondSocket";
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Socket")
+		FName SocketThirdName = "ThirdSocket";
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Socket")
+		FName SocketFourName = "FourSocket";
 
 
 private:
@@ -81,6 +98,7 @@ private:
 	FTimerHandle TimerHandleBuoyancy;
 	FTimerHandle TimerHandleDepth;
 	ALD48GameModeBase* GameMode;
+
 	
 	void PushRightMove();
 	void PushLeftMove();
@@ -88,6 +106,8 @@ private:
 	void PushDownMove();
 	void ChangeDefaultBuoyancy();
 	void UpdateTimerDepth();
+
+	void FreeStaticMesh(int32 Key);
 
 	UFUNCTION()
 		void OnOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

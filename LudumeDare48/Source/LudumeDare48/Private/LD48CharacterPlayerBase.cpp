@@ -9,7 +9,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/LD48OxygenActorComponent.h"
-#include "Public/LD48GameModeBase.h"
+#include "Components/StaticMeshComponent.h"
 #include "Items/LD48BaseItemsActor.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogLD48CharacterPlayerBase, All, All);
@@ -32,6 +32,36 @@ ALD48CharacterPlayerBase::ALD48CharacterPlayerBase()
 	this->OxygenActorComponent = CreateDefaultSubobject<ULD48OxygenActorComponent>("Oxygen Component");
 
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ALD48CharacterPlayerBase::OnOverlapComponent);
+
+	//Create for socket
+	this->FirstStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("Top");
+	this->SecondStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("Middle");
+	this->ThirdStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("Low");
+	this->FourStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("Four");
+
+	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
+
+	this->FirstStaticMesh->SetSimulatePhysics(false);
+	this->FirstStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	this->FirstStaticMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	this->FirstStaticMesh->AttachToComponent(GetMesh(), AttachmentRules, this->SocketFirstName);
+
+	this->SecondStaticMesh->SetSimulatePhysics(false);
+	this->SecondStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	this->SecondStaticMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	this->SecondStaticMesh->AttachToComponent(GetMesh(), AttachmentRules, this->SocketSecondName);
+
+	this->ThirdStaticMesh->SetSimulatePhysics(false);
+	this->ThirdStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	this->ThirdStaticMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	this->ThirdStaticMesh->AttachToComponent(GetMesh(), AttachmentRules, this->SocketThirdName);
+
+	this->FourStaticMesh->SetSimulatePhysics(false);
+	this->FourStaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	this->FourStaticMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	this->FourStaticMesh->AttachToComponent(GetMesh(), AttachmentRules, this->SocketFourName);
+
+	
 }
 
 // Called when the game starts or when spawned
@@ -50,6 +80,7 @@ void ALD48CharacterPlayerBase::BeginPlay()
 	this->GameMode = Cast<ALD48GameModeBase>(GetWorld()->GetAuthGameMode());
 	this->OnChangeOxygen.Broadcast(this->OxygenActorComponent->GetCurrentOxygen());
 	this->OnChangeKeys.Broadcast(this->CountKeys);
+	
 }
 
 
@@ -81,6 +112,7 @@ void ALD48CharacterPlayerBase::SetupPlayerInputComponent(UInputComponent* Player
 void ALD48CharacterPlayerBase::DecreaseCountKey()
 {
 	this->CountKeys--;
+	this->FreeStaticMesh(this->CountKeys);
 	this->OnChangeKeys.Broadcast(this->CountKeys);
 	//if count keys == 0 win
 	if (this->CountKeys == 0)
@@ -162,8 +194,25 @@ void ALD48CharacterPlayerBase::UpdateTimerDepth()
 	}
 }
 
+void ALD48CharacterPlayerBase::FreeStaticMesh(int Key)
+{
+	if (Key == 2)
+	{
+		this->FirstStaticMesh->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
+	}
+	else if (Key == 1)
+	{
+		this->SecondStaticMesh->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
+	}
+	else if (Key == 0)
+	{
+		this->ThirdStaticMesh->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
+		this->FourStaticMesh->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
+	}
+}
+
 void ALD48CharacterPlayerBase::OnOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                                  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	const auto TempItem = Cast<ALD48BaseItemsActor>(OtherActor);
 	if (TempItem)
