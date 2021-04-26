@@ -103,6 +103,7 @@ private:
 	void PushDownMove();
 	void ChangeDefaultBuoyancy();
 	void UpdateTimerDepth();
+	void UpdateCaScene(EGameState NewState);
 
 	void FreeStaticMesh(int32 Key);
 

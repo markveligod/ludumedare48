@@ -44,6 +44,7 @@ void ULD48OxygenActorComponent::AppEndOxygen(float Amount)
 	//if current oxygen == 0 is death
 	if (this->CurrentOxygen == 0)
 	{
+		TempCharacter->CameraComponent->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 		this->GameMode->OnDeath.Broadcast();
 		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleOxygen);
 	}

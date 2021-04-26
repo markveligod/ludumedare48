@@ -33,6 +33,11 @@ void ALD48PlayerController::OnGameState(EGameState GameState)
 		bShowMouseCursor = false;
 		this->GameMode->ClearPause();
 	}
+	else if (GameState == EGameState::Welcome)
+	{
+		SetInputMode(FInputModeUIOnly());
+		bShowMouseCursor = false;
+	}
 	else if (GameState == EGameState::Pause)
 	{
 		this->GameMode->SetPause(this);

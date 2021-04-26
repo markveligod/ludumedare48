@@ -4,14 +4,21 @@
 #include "HUD/LD48PlayerHUD.h"
 #include "Widgets/PlayerUserWidget.h"
 #include "Public/LD48GameModeBase.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogLD48PlayerHUD, All, All);
+
+
+bool ALD48PlayerHUD::GetIsWelcome() const
+{
+    return (this->bIsWelcome);
+}
 
 void ALD48PlayerHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!this->PlayerHudWidgetClass || !this->GameOverWidgetClass || !this->GamePauseWidgetClass)
+	if (!this->PlayerHudWidgetClass || !this->GameOverWidgetClass || !this->GamePauseWidgetClass || !this->WelcomeHudWidgetClass)
 	{
 		UE_LOG(LogLD48PlayerHUD, Error, TEXT("Widgets is nullptr"));
 	}
@@ -19,7 +26,7 @@ void ALD48PlayerHUD::BeginPlay()
 	this->GameWidgets.Add(EGameState::InProgress, CreateWidget<UUserWidget>(GetWorld(), this->PlayerHudWidgetClass));
     this->GameWidgets.Add(EGameState::GameOver, CreateWidget<UUserWidget>(GetWorld(), this->GameOverWidgetClass));
     this->GameWidgets.Add(EGameState::Pause, CreateWidget<UUserWidget>(GetWorld(), this->GamePauseWidgetClass));
-
+    this->GameWidgets.Add(EGameState::Welcome, CreateWidget<UUserWidget>(GetWorld(), this->WelcomeHudWidgetClass));
 	
     for (auto TempGameWidgetPair : this->GameWidgets)
     {
@@ -42,6 +49,7 @@ void ALD48PlayerHUD::BeginPlay()
 
 void ALD48PlayerHUD::OnStateChanged(EGameState NewState)
 {
+    this->bIsWelcome = NewState == EGameState::Welcome;
     if (this->CurrentWidget)
     {
         this->CurrentWidget->SetVisibility(ESlateVisibility::Hidden);

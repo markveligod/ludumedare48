@@ -23,7 +23,7 @@ void ALD48GameModeBase::StartPlay()
 
 	//inprogress is temp
 	this->OnDeath.AddUObject(this, &ALD48GameModeBase::CallGameOverDeath);
-	this->ChangeGameState(EGameState::InProgress);
+	this->ChangeGameState(EGameState::Welcome);
 }
 
 void ALD48GameModeBase::UpdateTotalDepth()
@@ -32,9 +32,9 @@ void ALD48GameModeBase::UpdateTotalDepth()
 	if (GameInst)
 	{
 		const auto TempCharacter = Cast<ALD48CharacterPlayerBase>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		if (TempCharacter)
+		if (TempCharacter && GameInst->TotalDepth < TempCharacter->GetCountDepth())
 			GameInst->TotalDepth = TempCharacter->GetCountDepth();
-		UE_LOG(LogLD48GameModeBase, Warning, TEXT("Total Game Mode LD48: %d"), TempCharacter->GetCountDepth());
+		UE_LOG(LogLD48GameModeBase, Display, TEXT("Total Game Mode LD48: %d"), TempCharacter->GetCountDepth());
 	}
 }
 
