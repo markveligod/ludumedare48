@@ -27,9 +27,9 @@ void ULD48OxygenActorComponent::BeginPlay()
 	check(GetWorld());
 	
 	this->CurrentOxygen = this->DefaultOxygen;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandleOxygen, this, &ULD48OxygenActorComponent::DecreaseOxygen, this->DecreaseOxygenRateTime, true);
 	this->GameMode = Cast<ALD48GameModeBase>(GetWorld()->GetAuthGameMode());
-	check(this->GameMode);
+        check(this->GameMode);
+	this->GameMode->OnGameState.AddUObject(this, &ULD48OxygenActorComponent::LD48UpdateDefualtTimer);
 	
 }
 
@@ -72,6 +72,14 @@ void ULD48OxygenActorComponent::DecreaseOxygen()
 		GetWorld()->GetTimerManager().ClearTimer(this->TimerHandleOxygen);
 		GetWorld()->GetTimerManager().ClearTimer(TempCharacter->TimerHandleBuoyancy);
 		GetWorld()->GetTimerManager().ClearTimer(TempCharacter->TimerHandleDepth);
+	}
+}
+
+void ULD48OxygenActorComponent::LD48UpdateDefualtTimer(EGameState NewState)
+{
+	if (NewState == EGameState::InProgress)
+	{
+		GetWorld()->GetTimerManager().SetTimer(TimerHandleOxygen, this, &ULD48OxygenActorComponent::DecreaseOxygen, this->DecreaseOxygenRateTime, true);
 	}
 }
 

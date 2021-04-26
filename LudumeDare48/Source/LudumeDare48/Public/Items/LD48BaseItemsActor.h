@@ -26,12 +26,12 @@ public:
 		bool bIsKey = false;
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor")
 		bool bIsOxygen = false;
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor", meta = (EditCondition = "bIsOxygen", ClampMin = "0.1", ClampMax = "50.0"))
-		float HealValueOxygen = 25.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Status Editor", meta = (EditCondition = "bIsOxygen", ClampMin = "0.1", ClampMax = "50.0"))
+		float HealValueOxygen = 12.f;
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor")
 		bool bIsOther = false;
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Status Editor", meta = (EditCondition = "bIsOther", ClampMin = "0.1", ClampMax = "50.0"))
-		float DamageValueOxygen = 10.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Status Editor", meta = (EditCondition = "bIsOther", ClampMin = "0.1", ClampMax = "50.0"))
+		float DamageValueOxygen = 20.f;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
