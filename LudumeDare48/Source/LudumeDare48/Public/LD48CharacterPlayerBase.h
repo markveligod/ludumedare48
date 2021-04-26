@@ -13,6 +13,7 @@ class UStaticMeshComponent;
 class USpringArmComponent;
 class ULD48OxygenActorComponent;
 class ALD48GameModeBase;
+class UVFXActorComponent;
 
 UCLASS()
 class LUDUMEDARE48_API ALD48CharacterPlayerBase : public ACharacter
@@ -44,7 +45,8 @@ public:
 	FOnChangeKeys OnChangeKeys;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		UCameraComponent* CameraComponent;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+		UVFXActorComponent* VFXComponent;
 	FTimerHandle TimerHandleBuoyancy;
 	FTimerHandle TimerHandleDepth;
 	void SetIsDeadTrue();

@@ -11,8 +11,9 @@
 #include "Components/LD48OxygenActorComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Items/LD48BaseItemsActor.h"
-#include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/VFXActorComponent.h"
+#include "Sound/SoundCue.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogLD48CharacterPlayerBase, All, All);
 
@@ -41,6 +42,8 @@ ALD48CharacterPlayerBase::ALD48CharacterPlayerBase()
 	this->ThirdStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("Low");
 	this->FourStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("Four");
 
+	//VFX
+	this->VFXComponent = CreateDefaultSubobject<UVFXActorComponent>("VFX Component");
 	
 }
 
@@ -260,11 +263,13 @@ void ALD48CharacterPlayerBase::OnOverlapComponent(UPrimitiveComponent* Overlappe
 		}
 		else if (TempItem->bIsOxygen)
 		{
+			
 			UGameplayStatics::PlaySound2D(GetWorld(), this->OxygenSound);
 			CallChangeOxygen(TempItem->HealValueOxygen);
 		}
 		else if (TempItem->bIsOther)
 		{
+			this->VFXComponent->PlayVFXboom(TempItem->GetActorLocation());
 			UGameplayStatics::PlaySound2D(GetWorld(), this->BoomSound);
 			CallChangeOxygen(-TempItem->DamageValueOxygen);
 		}
