@@ -39,8 +39,7 @@ ALD48CharacterPlayerBase::ALD48CharacterPlayerBase()
 	this->ThirdStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("Low");
 	this->FourStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("Four");
 
-
-	this->ParticleExpDynimet = CreateDefaultSubobject<UParticleSystemComponent>("Particle exploser");
+	
 }
 
 // Called when the game starts or when spawned
@@ -52,7 +51,6 @@ void ALD48CharacterPlayerBase::BeginPlay()
 	check(GetCharacterMovement());
 	check(this->OxygenActorComponent);
 	check(GetWorld());
-	check(this->ParticleExpDynimet);
 
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
 
@@ -83,6 +81,7 @@ void ALD48CharacterPlayerBase::BeginPlay()
 	this->GameMode = Cast<ALD48GameModeBase>(GetWorld()->GetAuthGameMode());
 	this->OnChangeOxygen.Broadcast(this->OxygenActorComponent->GetCurrentOxygen());
 	this->OnChangeKeys.Broadcast(this->CountKeys);
+	this->GameMode->OnGameState.AddUObject(this, &ALD48CharacterPlayerBase::UpdateCaScene);
 	
 }
 
@@ -203,6 +202,18 @@ void ALD48CharacterPlayerBase::UpdateTimerDepth()
 	{
 		this->CountDepth = (this->StartLocationZ - GetActorLocation().Z) / 100;
 		this->OnChangeDepth.Broadcast(this->CountDepth);
+	}
+}
+
+void ALD48CharacterPlayerBase::UpdateCaScene(EGameState NewState)
+{
+	if(NewState == EGameState::Welcome)
+	{
+		GetCharacterMovement()->Buoyancy = 1.f;
+	}
+	else if (NewState == EGameState::InProgress)
+	{
+		GetCharacterMovement()->Buoyancy = this->DefaultPowerBuoyancy;
 	}
 }
 
