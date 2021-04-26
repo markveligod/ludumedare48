@@ -14,6 +14,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "MSBJGameInstance.h"
 #include "Components/TextBlock.h"
+#include "Sound/SoundClass.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogMSBJMenuWidget, All, All);
 
@@ -23,6 +24,12 @@ void UMSBJMenuWidget::NativeOnInitialized()
 	{
 		UE_LOG(LogMSBJMenuWidget, Error, TEXT("Button is nullptr"));
 		return;
+	}
+
+	const auto GameInst = Cast<UMSBJGameInstance>(GetWorld()->GetGameInstance());
+	if (GameInst)
+	{
+		GameInst->MusicMenuClass->Properties.Volume = 0.25f;
 	}
 
 	this->StartGameButton->OnClicked.AddDynamic(this, &UMSBJMenuWidget::OnStartGame);

@@ -12,6 +12,7 @@
 #include "Engine/GameInstance.h"
 #include "MSBJGameInstance.generated.h"
 
+class USoundClass;
 /**
  * 
  */
@@ -26,4 +27,8 @@ public:
 		FName NameMenuLevel = NAME_None;
 	UPROPERTY(BlueprintReadOnly, Category = "Count Total")
 		int32 TotalDepth = 0;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound classes Editor")
+		USoundClass* MusicMenuClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound classes Editor")
+		USoundClass* SoundMenuClass;
 };

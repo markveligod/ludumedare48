@@ -7,6 +7,7 @@
 #include "Public/LD48DataTypes.h"
 #include "LD48CharacterPlayerBase.generated.h"
 
+class USoundCue;
 class UCameraComponent;
 class UStaticMeshComponent;
 class USpringArmComponent;
@@ -46,6 +47,7 @@ public:
 
 	FTimerHandle TimerHandleBuoyancy;
 	FTimerHandle TimerHandleDepth;
+	void SetIsDeadTrue();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -87,13 +89,26 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Socket")
 		FName SocketFourName = "FourSocket";
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+		USoundCue* BoomSound;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+		USoundCue* KeySound;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+		USoundCue* OxygenSound;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+		USoundCue* EnvSound;
+
+
 
 private:
+	bool IsDead = false;
 	int32 CountKeys = 3;
 	bool bIsKeyZero = false;
 	float CountDepth = 0.f;
 	bool bIsBuoyancyDone = false;	
 	ALD48GameModeBase* GameMode;
+
+	FTimerHandle TimerHandleEnv;
 
 	float StartLocationX;
 	float StartLocationZ;
@@ -107,6 +122,8 @@ private:
 
 	void FreeStaticMesh(int32 Key);
 
+	void RandomPlayEnv();
+	
 	UFUNCTION()
 		void OnOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

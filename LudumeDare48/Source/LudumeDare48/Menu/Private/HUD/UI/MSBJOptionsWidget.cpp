@@ -15,6 +15,7 @@
 #include "GameFramework/GameUserSettings.h"
 #include "Kismet/KismetInternationalizationLibrary.h"
 #include "Sound/SoundClass.h"
+#include "MSBJGameInstance.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogMSBJOptionsWidget, All, All);
 
@@ -58,6 +59,12 @@ void UMSBJOptionsWidget::NativeOnInitialized()
 	{
 		UE_LOG(LogMSBJOptionsWidget, Error, TEXT("Lol NativeOnInitialized is nullptr"));
 		return;
+	}
+	const auto GameInst = Cast<UMSBJGameInstance>(GetWorld()->GetGameInstance());
+	if (GameInst)
+	{
+		this->MusicMenuClass = GameInst->MusicMenuClass;
+		this->SoundMenuClass = GameInst->SoundMenuClass;
 	}
 	this->MusicSlider->OnValueChanged.AddDynamic(this, &UMSBJOptionsWidget::OnChangedMusicSlider);
 	this->SoundSlider->OnValueChanged.AddDynamic(this, &UMSBJOptionsWidget::OnChangedSoundSlider);

@@ -11,6 +11,8 @@
 #include "Components/LD48OxygenActorComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Items/LD48BaseItemsActor.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogLD48CharacterPlayerBase, All, All);
 
@@ -40,6 +42,11 @@ ALD48CharacterPlayerBase::ALD48CharacterPlayerBase()
 	this->FourStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("Four");
 
 	
+}
+
+void ALD48CharacterPlayerBase::SetIsDeadTrue()
+{
+	this->IsDead = true;
 }
 
 // Called when the game starts or when spawned
@@ -82,6 +89,7 @@ void ALD48CharacterPlayerBase::BeginPlay()
 	this->OnChangeOxygen.Broadcast(this->OxygenActorComponent->GetCurrentOxygen());
 	this->OnChangeKeys.Broadcast(this->CountKeys);
 	this->GameMode->OnGameState.AddUObject(this, &ALD48CharacterPlayerBase::UpdateCaScene);
+	GetWorld()->GetTimerManager().SetTimer(this->TimerHandleEnv, this, &ALD48CharacterPlayerBase::RandomPlayEnv, 5.f, true);
 	
 }
 
@@ -160,7 +168,7 @@ void ALD48CharacterPlayerBase::CallChangeOxygen(float Amount)
 
 void ALD48CharacterPlayerBase::RightMove(float Amount)
 {
-	if (Amount == 0)
+	if (Amount == 0 || this->IsDead)
 		return;
 	if (GetCharacterMovement()->IsSwimming())
 		AddMovementInput(GetActorRightVector(), Amount);
@@ -169,7 +177,7 @@ void ALD48CharacterPlayerBase::RightMove(float Amount)
 
 void ALD48CharacterPlayerBase::PushUpMove()
 {
-	if (!this->bIsBuoyancyDone && GetCharacterMovement()->IsSwimming())
+	if (!this->bIsBuoyancyDone && GetCharacterMovement()->IsSwimming() && !this->IsDead)
 	{
 		GetCharacterMovement()->Buoyancy = this->HoldPowerBuoyancy;
 		this->bIsBuoyancyDone = true;
@@ -181,7 +189,7 @@ void ALD48CharacterPlayerBase::PushUpMove()
 
 void ALD48CharacterPlayerBase::PushDownMove()
 {
-	if (!this->bIsBuoyancyDone && GetCharacterMovement()->IsSwimming())
+	if (!this->bIsBuoyancyDone && GetCharacterMovement()->IsSwimming() && !this->IsDead)
 	{
 		GetCharacterMovement()->Buoyancy = this->BoostPowerBuoyancy;
 		this->bIsBuoyancyDone = true;
@@ -234,22 +242,30 @@ void ALD48CharacterPlayerBase::FreeStaticMesh(int Key)
 	}
 }
 
+void ALD48CharacterPlayerBase::RandomPlayEnv()
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), this->EnvSound);
+}
+
 void ALD48CharacterPlayerBase::OnOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                                  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	const auto TempItem = Cast<ALD48BaseItemsActor>(OtherActor);
 	if (TempItem)
 	{
 		if (TempItem->bIsKey)
 		{
+			UGameplayStatics::PlaySound2D(GetWorld(), this->KeySound);
 			DecreaseCountKey();
 		}
 		else if (TempItem->bIsOxygen)
 		{
+			UGameplayStatics::PlaySound2D(GetWorld(), this->OxygenSound);
 			CallChangeOxygen(TempItem->HealValueOxygen);
 		}
 		else if (TempItem->bIsOther)
 		{
+			UGameplayStatics::PlaySound2D(GetWorld(), this->BoomSound);
 			CallChangeOxygen(-TempItem->DamageValueOxygen);
 		}
 		else

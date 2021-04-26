@@ -7,6 +7,7 @@
 #include "Public/LD48DataTypes.h"
 #include "LD48GameModeBase.generated.h"
 
+class UMSBJGameInstance;
 /**
  * 
  */
@@ -21,11 +22,13 @@ public:
 	void ChangeGameState(EGameState NewState);
 	ALD48GameModeBase();
 	int32 GetCountDepthEnd() const;
-	
 protected:
 	virtual void StartPlay() override;
 	
 private:
+	UMSBJGameInstance* GameInst;
+	float StartSound;
+	float StartMusic;
 	void UpdateTotalDepth();
 	EGameState CurrentState = EGameState::WaitingToStart;
 	void CallGameOverDeath();

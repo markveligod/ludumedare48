@@ -55,14 +55,13 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 		UCheckBox* FullScreenCheckBox;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound classes Editor")
-		USoundClass* MusicMenuClass;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound classes Editor")
-		USoundClass* SoundMenuClass;
+	
 
 	virtual void NativeOnInitialized() override;
 
 private:
+	USoundClass* MusicMenuClass;
+	USoundClass* SoundMenuClass;
 	UFUNCTION()
 		void OnChangedMusicSlider(float Value);
 
