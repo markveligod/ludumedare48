@@ -41,4 +41,5 @@ private:
 	FTimerHandle TimerHandleOxygen;
 
 	void DecreaseOxygen();
+	void LD48UpdateDefualtTimer(EGameState NewState);
 };
