@@ -7,6 +7,7 @@
 #include "GameOverUserWidget.generated.h"
 
 class UButton;
+class UTextBlock;
 /**
  * 
  */
@@ -15,11 +16,17 @@ class LUDUMEDARE48_API UGameOverUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	void SetNewTotal(FString NewTotal);
 protected:
 	virtual void NativeOnInitialized() override;
 
 	UPROPERTY(meta = (BindWidget))
 		UButton* MainMenuButton;
+
+	UPROPERTY(meta = (BindWidget))
+		UTextBlock* TotalTextBlock;
+	
 private:
 	UFUNCTION()
 	void OnExitLevel();

@@ -17,6 +17,11 @@ ALD48GameModeBase::ALD48GameModeBase()
 	PlayerControllerClass = ALD48PlayerController::StaticClass();
 }
 
+int32 ALD48GameModeBase::GetCountDepthEnd() const
+{
+	return (this->DepthCountEnd);
+}
+
 void ALD48GameModeBase::StartPlay()
 {
 	Super::StartPlay();
@@ -33,8 +38,11 @@ void ALD48GameModeBase::UpdateTotalDepth()
 	{
 		const auto TempCharacter = Cast<ALD48CharacterPlayerBase>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 		if (TempCharacter && GameInst->TotalDepth < TempCharacter->GetCountDepth())
+		{
 			GameInst->TotalDepth = TempCharacter->GetCountDepth();
-		UE_LOG(LogLD48GameModeBase, Display, TEXT("Total Game Mode LD48: %d"), TempCharacter->GetCountDepth());
+			this->DepthCountEnd = TempCharacter->GetCountDepth();
+		}
+		  UE_LOG(LogLD48GameModeBase, Display, TEXT("Total Game Mode LD48: %d"), TempCharacter->GetCountDepth());
 	}
 }
 

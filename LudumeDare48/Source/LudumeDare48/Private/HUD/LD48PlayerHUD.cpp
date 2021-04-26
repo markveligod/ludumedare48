@@ -2,9 +2,9 @@
 
 
 #include "HUD/LD48PlayerHUD.h"
-#include "Widgets/PlayerUserWidget.h"
 #include "Public/LD48GameModeBase.h"
 #include "Kismet/GameplayStatics.h"
+#include "Widgets/GameOverUserWidget.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogLD48PlayerHUD, All, All);
 
@@ -62,6 +62,18 @@ void ALD48PlayerHUD::OnStateChanged(EGameState NewState)
 
     if (this->CurrentWidget)
     {
+        if (EGameState::GameOver == NewState) 
+        {
+            const auto TempWidget = Cast<UGameOverUserWidget>(this->CurrentWidget);
+            if (TempWidget) 
+            {
+                const auto GameMode = Cast<ALD48GameModeBase>(GetWorld()->GetAuthGameMode());
+                if (GameMode)
+                {
+                    TempWidget->SetNewTotal(FString(FString::FromInt(GameMode->GetCountDepthEnd()) + FString("m")));
+                }
+            }
+        }
         this->CurrentWidget->SetVisibility(ESlateVisibility::Visible);
     }
 

@@ -20,6 +20,7 @@ public:
 	FOnDeath OnDeath;
 	void ChangeGameState(EGameState NewState);
 	ALD48GameModeBase();
+	int32 GetCountDepthEnd() const;
 	
 protected:
 	virtual void StartPlay() override;
@@ -28,4 +29,5 @@ private:
 	void UpdateTotalDepth();
 	EGameState CurrentState = EGameState::WaitingToStart;
 	void CallGameOverDeath();
+	int32 DepthCountEnd;
 };
