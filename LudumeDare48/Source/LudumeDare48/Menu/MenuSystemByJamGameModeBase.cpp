@@ -55,8 +55,8 @@ void AMenuSystemByJamGameModeBase::SetStartPlaySettings()
 	UserSettings->ApplySettings(false);
 
 	const auto DefaultLanguagePlayer = UKismetSystemLibrary::GetDefaultLanguage();
-	if (DefaultLanguagePlayer == "en")
-		UKismetInternationalizationLibrary::SetCurrentCulture(FString("en"), false);
-	else
+	if (DefaultLanguagePlayer == "ru-RU")
 		UKismetInternationalizationLibrary::SetCurrentCulture(FString("ru-RU"), false);
+	else
+		UKismetInternationalizationLibrary::SetCurrentCulture(FString("en"), false);
 }
