@@ -263,13 +263,13 @@ void ALD48CharacterPlayerBase::OnOverlapComponent(UPrimitiveComponent* Overlappe
 		}
 		else if (TempItem->bIsOxygen)
 		{
-			
+			this->VFXComponent->PlayVFXBubble(TempItem->GetActorLocation());
 			UGameplayStatics::PlaySound2D(GetWorld(), this->OxygenSound);
 			CallChangeOxygen(TempItem->HealValueOxygen);
 		}
 		else if (TempItem->bIsOther)
 		{
-			this->VFXComponent->PlayVFXboom(TempItem->GetActorLocation());
+			this->VFXComponent->PlayVFXBoom(TempItem->GetActorLocation());
 			UGameplayStatics::PlaySound2D(GetWorld(), this->BoomSound);
 			CallChangeOxygen(-TempItem->DamageValueOxygen);
 		}

@@ -5,7 +5,17 @@
 #include "NiagaraFunctionLibrary.h"
 
 
-void UVFXActorComponent::PlayVFXboom(FVector Location)
+void UVFXActorComponent::PlayVFXBoom(FVector Location)
 {
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), this->EffectBoom, Location);
+	this->PlayVFXAnim(this->EffectBoom, Location);
+}
+
+void UVFXActorComponent::PlayVFXBubble(FVector Location)
+{
+	this->PlayVFXAnim(this->EffectBubble, Location);
+}
+
+void UVFXActorComponent::PlayVFXAnim(UNiagaraSystem* Effect, FVector Location)
+{
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Effect, Location);
 }

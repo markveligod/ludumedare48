@@ -14,8 +14,15 @@ class LUDUMEDARE48_API UVFXActorComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	void PlayVFXboom(FVector Location);
+	void PlayVFXBoom(FVector Location);
+	void PlayVFXBubble(FVector Location);
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
 		UNiagaraSystem* EffectBoom;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+		UNiagaraSystem* EffectBubble;
+
+private:
+	void PlayVFXAnim(UNiagaraSystem* Effect, FVector Location);
 };
