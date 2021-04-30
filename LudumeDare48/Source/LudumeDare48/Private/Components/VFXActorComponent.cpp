@@ -15,7 +15,13 @@ void UVFXActorComponent::PlayVFXBubble(FVector Location)
 	this->PlayVFXAnim(this->EffectBubble, Location);
 }
 
+void UVFXActorComponent::PlayVFXKeys(FVector Location)
+{
+	this->PlayVFXAnim(this->EffectKeys, Location);
+}
+
 void UVFXActorComponent::PlayVFXAnim(UNiagaraSystem* Effect, FVector Location)
 {
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Effect, Location);
 }
+

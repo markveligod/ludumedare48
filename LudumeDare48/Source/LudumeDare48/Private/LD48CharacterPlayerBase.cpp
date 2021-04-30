@@ -258,6 +258,7 @@ void ALD48CharacterPlayerBase::OnOverlapComponent(UPrimitiveComponent* Overlappe
 	{
 		if (TempItem->bIsKey)
 		{
+			this->VFXComponent->PlayVFXKeys(TempItem->GetActorLocation());
 			UGameplayStatics::PlaySound2D(GetWorld(), this->KeySound);
 			DecreaseCountKey();
 		}
